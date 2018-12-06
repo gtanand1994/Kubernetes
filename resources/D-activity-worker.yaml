@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: activityworker
+  labels:
+    app: activityworker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: activityworker
+  template:
+    metadata:
+      labels:
+        app: activityworker
+    spec:
+      containers:
+      - env:
+        envFrom:
+          - configMapRef:
+              name: access-env
+        name: activityworker
+        command: ["/run-activityworker.sh"]
+        image: blowhorn_activity_worker
+        imagePullPolicy: Never
+      restartPolicy: "Always"

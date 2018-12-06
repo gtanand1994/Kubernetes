@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-server
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - env:
+        - name: LINKED_CONTAINER_NAME
+          value: django
+        - name: LINKED_CONTAINER_PORT
+          value: "5000"
+        envFrom:
+          - configMapRef:
+              name: access-env
+        name: nginx
+        image: blowhorn_nginx
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80
+        - containerPort: 443
+        volumeMounts:
+        - mountPath: /etc/nginx/fullchain.pem
+          name: fullchain-volume
+        - mountPath: /etc/nginx/privkey.pem
+          name: privkey-volume
+      volumes:
+      - name: fullchain-volume
+        hostPath:
+         # directory location on host
+          path: /home/ubuntu/fullchain.pem
+         # this field is optional
+          type: File
+      - name: privkey-volume
+        hostPath:
+          path: /home/ubuntu/privkey.pem
+          type: File
+      restartPolicy: "Always"

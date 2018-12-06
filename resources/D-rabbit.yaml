@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: broker-server
+  labels:
+    app: rabbitmq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbit
+  template:
+    metadata:
+      labels:
+        app: rabbit
+    spec:
+      containers:
+      - env:
+        envFrom:
+          - configMapRef:
+              name: access-env
+        name: rabbit
+        image: rabbitmq:3-management
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 15672
+        - containerPort: 5672
+      restartPolicy: "Always"

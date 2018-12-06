@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scheduler
+  labels:
+    app: scheduler
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scheduler
+  template:
+    metadata:
+      labels:
+        app: scheduler
+    spec:
+      containers:
+      - env:
+        envFrom:
+          - configMapRef:
+              name: access-env
+        name: scheduler
+        command: ["/run-celerybeat.sh"]
+        image: blowhorn_scheduler
+        imagePullPolicy: Never
+      restartPolicy: "Always"

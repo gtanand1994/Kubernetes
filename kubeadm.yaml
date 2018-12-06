@@ -1,0 +1,26 @@
+apiVersion: kubeadm.k8s.io/v1alpha1
+kind: MasterConfiguration
+api:
+  advertiseAddress: 172.31.14.243
+  bindPort: 6443
+etcd:
+  endpoints:
+  - http://172.31.14.243:2379
+  - http://172.31.7.70:2379
+  - http://172.31.13.151:2379
+  dataDir: /var/lib/etcd
+networking:
+  podSubnet: 192.168.0.0/16
+apiServerCertSANs:
+- kub01
+- kub02
+- kub03
+- kublb01.home
+- kublb01
+- master.itshellws-k8s.com
+- cluster.itshellws-k8s.com
+- elb.itshellws-k8s.com
+- 172.31.14.243
+- 172.31.7.70
+- 172.31.13.151
+- 172.31.16.78
